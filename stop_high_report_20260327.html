@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本股市 涨停板报告 2026/03/27 — 暖色版</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f5f0e8;
+    color: #2d2416;
+    font-family: 'Georgia', 'Noto Serif SC', 'Hiragino Mincho ProN', serif;
+    padding: 28px;
+    min-height: 100vh;
+  }
+
+  .report-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .header {
+    background: #fffdf7;
+    border: 1px solid #e2d5b8;
+    border-top: 4px solid #b5451b;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(100,60,10,0.07);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .header-icon { font-size: 20px; }
+  .header-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a0f00;
+    letter-spacing: 1px;
+  }
+  .header-date {
+    font-size: 12px;
+    color: #8c7355;
+    margin-top: 3px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  .header-sub {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #a8916a;
+    border-top: 1px solid #e8dcc5;
+    padding-top: 8px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8c7355;
+    margin: 22px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e2d5b8;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  .dot-red  { width: 7px; height: 7px; border-radius: 50%; background: #b5451b; flex-shrink: 0; }
+  .dot-yel  { width: 7px; height: 7px; border-radius: 50%; background: #c47d15; flex-shrink: 0; }
+
+  .card {
+    background: #fffdf7;
+    border: 1px solid #e2d5b8;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(100,60,10,0.06);
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    border-radius: 8px 0 0 8px;
+  }
+  .card.stop-high::before { background: #b5451b; }
+  .card.ipo::before       { background: #6b3fa0; }
+  .card.partial::before   { background: #c47d15; }
+  .card.warning::before   { background: #a09070; }
+
+  .card-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 7px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  .code {
+    font-size: 11px;
+    font-weight: 700;
+    color: #7a5c2e;
+    background: #f5ead0;
+    border: 1px solid #dfc99a;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-family: monospace;
+  }
+  .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a0f00;
+  }
+  .market {
+    font-size: 11px;
+    color: #8c7355;
+    background: #ede5cf;
+    border-radius: 3px;
+    padding: 1px 6px;
+  }
+  .badge-ipo {
+    font-size: 10px;
+    font-weight: 700;
+    color: #6b3fa0;
+    background: #f3edf9;
+    border: 1px solid #c9b0e8;
+    border-radius: 3px;
+    padding: 1px 6px;
+  }
+
+  .pct-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  .price {
+    font-size: 21px;
+    font-weight: 800;
+    color: #b5451b;
+    font-family: 'Georgia', serif;
+  }
+  .price.partial-color { color: #c47d15; }
+  .price.warning-color { color: #8c7355; }
+  .badge-s {
+    font-size: 10px;
+    font-weight: 700;
+    color: #b5451b;
+    background: #fbeee8;
+    border: 1px solid #e8b49a;
+    border-radius: 3px;
+    padding: 2px 7px;
+  }
+  .price-label {
+    font-size: 11px;
+    color: #8c7355;
+  }
+
+  .news {
+    font-size: 13px;
+    color: #3d2b10;
+    line-height: 1.7;
+    padding: 8px 10px;
+    background: #faf5ea;
+    border-radius: 5px;
+    border-left: 3px solid #dfc99a;
+    margin-bottom: 10px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+
+  .links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #7a5c2e;
+    background: #f5ead0;
+    border: 1px solid #dfc99a;
+    border-radius: 5px;
+    padding: 4px 10px;
+    text-decoration: none;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    transition: background 0.15s;
+  }
+  .link-btn:hover { background: #ede0b8; }
+  .link-btn.irbank {
+    color: #2e6b3e;
+    background: #eaf5ed;
+    border-color: #a8d5b5;
+  }
+  .link-btn.irbank:hover { background: #d5ecdc; }
+
+  .footer {
+    margin-top: 22px;
+    padding: 12px 16px;
+    background: #fffdf7;
+    border: 1px solid #e2d5b8;
+    border-radius: 6px;
+    font-size: 11px;
+    color: #a8916a;
+    line-height: 1.8;
+    text-align: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  .footer span { color: #c8b090; }
+</style>
+</head>
+<body>
+<div class="report-wrap">
+
+  <div class="header">
+    <div class="header-top">
+      <span class="header-icon">📈</span>
+      <span class="header-title">日本股市 涨停板报告</span>
+    </div>
+    <div class="header-date">2026年03月27日（周五）收盘 ｜ 数据来源：株探 / IR Bank</div>
+    <div class="header-sub">
+      日经平均 53,373.07（-230.58 / -0.43%）｜ 美元/日元 159.89 ｜ 涨停共 8 支（含盘中触及）
+    </div>
+  </div>
+
+  <div class="section-title"><span class="dot-red"></span>收盘涨停板 — 5支</div>
+
+  <div class="card stop-high">
+    <div class="card-header">
+      <span class="code">7794</span>
+      <span class="name">EDP（イーディーピー）</span>
+      <span class="market">东G</span>
+    </div>
+    <div class="pct-row">
+      <span class="price">+29.59%</span>
+      <span class="badge-s">S高</span>
+      <span class="price-label">1,314円（+300円）</span>
+    </div>
+    <div class="news">
+      📌 与本田技术研究所签订<strong>金刚石器件材料共同研究意向书</strong>（3/26披露）<br>
+      半导体下一代材料研发，市场对本田技术力与EDP合作预期高涨。
+    </div>
+    <div class="links">
+      <a class="link-btn irbank" href="https://irbank.net/7794/results" target="_blank">📊 IR Bank 决算</a>
+      <a class="link-btn" href="https://kabutan.jp/stock/?code=7794" target="_blank">📈 株探</a>
+    </div>
+  </div>
+
+  <div class="card stop-high">
+    <div class="card-header">
+      <span class="code">149A</span>
+      <span class="name">Sinca（シンカ）</span>
+      <span class="market">东G</span>
+    </div>
+    <div class="pct-row">
+      <span class="price">+23.06%</span>
+      <span class="badge-s">S高</span>
+      <span class="price-label">1,601円（+300円）</span>
+    </div>
+    <div class="news">
+      📌 与 <strong>Fixstars 株式会社签订业务合作协议</strong>（3/27披露）<br>
+      信息通信领域合作，AI·高性能计算方向协同效应受期待。
+    </div>
+    <div class="links">
+      <a class="link-btn irbank" href="https://irbank.net/149A/results" target="_blank">📊 IR Bank 决算</a>
+      <a class="link-btn" href="https://kabutan.jp/stock/?code=149A" target="_blank">📈 株探</a>
+    </div>
+  </div>
+
+  <div class="card stop-high">
+    <div class="card-header">
+      <span class="code">4840</span>
+      <span class="name">TriEyes（トライアイズ）</span>
+      <span class="market">东S</span>
+    </div>
+    <div class="pct-row">
+      <span class="price">+19.34%</span>
+      <span class="badge-s">S高</span>
+      <span class="price-label">617円（+100円）</span>
+    </div>
+    <div class="news">
+      📌 <strong>代表取締役更换</strong>（3/26披露）＋ 知名投资人<strong>岩尾俊兵持股超5%</strong>公告<br>
+      经营革新预期与著名投资人大量入场双重利好叠加。
+    </div>
+    <div class="links">
+      <a class="link-btn irbank" href="https://irbank.net/4840/results" target="_blank">📊 IR Bank 决算</a>
+      <a class="link-btn" href="https://kabutan.jp/stock/?code=4840" target="_blank">📈 株探</a>
+    </div>
+  </div>
+
+  <div class="card stop-high">
+    <div class="card-header">
+      <span class="code">1514</span>
+      <span class="name">住石HD</span>
+      <span class="market">东S</span>
+    </div>
+    <div class="pct-row">
+      <span class="price">+17.46%</span>
+      <span class="badge-s">S高</span>
+      <span class="price-label">1,009円（+150円）</span>
+    </div>
+    <div class="news">
+      📌 澳大利亚 <strong>Wambo 煤矿派发逾12亿日元股息</strong>（3/26披露）<br>
+      参股矿山带来超预期现金收入，矿业资产价值重估预期升温。
+    </div>
+    <div class="links">
+      <a class="link-btn irbank" href="https://irbank.net/1514/results" target="_blank">📊 IR Bank 决算</a>
+      <a class="link-btn" href="https://kabutan.jp/stock/?code=1514" target="_blank">📈 株探</a>
+    </div>
+  </div>
+
+  <div class="card ipo">
+    <div class="card-header">
+      <span class="code">523A</span>
+      <span class="name">Seiwa HD（セイワHD）</span>
+      <span class="market">东G</span>
+      <span class="badge-ipo">IPO当日</span>
+    </div>
+    <div class="pct-row">
+      <span class="price" style="color:#6b3fa0;">S高</span>
+      <span class="price-label">1,520円收盘（发行价 1,250円）</span>
+    </div>
+    <div class="news">
+      📌 本日在东证Growth市场<strong>新规上市</strong>（金属制品）<br>
+      开盘价1,220円跌破发行价，但买盘持续涌入，收盘逆转至涨停板。
+    </div>
+    <div class="links">
+      <a class="link-btn irbank" href="https://irbank.net/523A/results" target="_blank">📊 IR Bank 决算</a>
+      <a class="link-btn" href="https://kabutan.jp/stock/?code=523A" target="_blank">📈 株探</a>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="dot-yel"></span>盘中触及涨停 — 3支</div>
+
+  <div class="card partial">
+    <div class="card-header">
+      <span class="code">4888</span>
+      <span class="name">ステラファーマ</span>
+      <span class="market">东G</span>
+    </div>
+    <div class="pct-row">
+      <span class="price partial-color">+13.24%</span>
+      <span class="price-label">881円（+103円）｜ 盘中触及涨停</span>
+    </div>
+    <div class="news">
+      📌 BNCT新药「<strong>Borofalan(10B)</strong>」针对血管肉瘤提交上市申请（3/24）<br>
+      上周以来持续上涨；中国BNCT治疗中心启动运营亦为顺风支撑。
+    </div>
+    <div class="links">
+      <a class="link-btn irbank" href="https://irbank.net/4888/results" target="_blank">📊 IR Bank 决算</a>
+      <a class="link-btn" href="https://kabutan.jp/stock/?code=4888" target="_blank">📈 株探</a>
+    </div>
+  </div>
+
+  <div class="card partial">
+    <div class="card-header">
+      <span class="code">4167</span>
+      <span class="name">ここペリ</span>
+      <span class="market">东G</span>
+    </div>
+    <div class="pct-row">
+      <span class="price partial-color">+0.28%</span>
+      <span class="price-label">359円（+1円）｜ 盘中买盘气配</span>
+    </div>
+    <div class="news">
+      📌 无明确利好，资金博弈下短暂触及涨停买盘气配，实际涨幅甚微。
+    </div>
+    <div class="links">
+      <a class="link-btn irbank" href="https://irbank.net/4167/results" target="_blank">📊 IR Bank 决算</a>
+      <a class="link-btn" href="https://kabutan.jp/stock/?code=4167" target="_blank">📈 株探</a>
+    </div>
+  </div>
+
+  <div class="card warning">
+    <div class="card-header">
+      <span class="code">2195</span>
+      <span class="name">アミタ HD</span>
+      <span class="market">东G</span>
+    </div>
+    <div class="pct-row">
+      <span class="price warning-color">-3.63%</span>
+      <span class="price-label">425円（-16円）｜ ⚠️ 触及涨停后大幅回落</span>
+    </div>
+    <div class="news">
+      📌 控股股东相关事项披露（3/26）触发短暂买盘<br>
+      ⚠️ 盘中买盘气配后遭遇大量获利了结，收盘收跌。涨停后反转需警惕。
+    </div>
+    <div class="links">
+      <a class="link-btn irbank" href="https://irbank.net/2195/results" target="_blank">📊 IR Bank 决算</a>
+      <a class="link-btn" href="https://kabutan.jp/stock/?code=2195" target="_blank">📈 株探</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    数据来源：<span>株探（kabutan.jp）</span> / <span>IR Bank（irbank.net）</span><br>
+    2026年3月27日 收盘时点　｜　⚠️ 本内容仅供参考，不构成投资建议，投资有风险，操作请谨慎
+  </div>
+
+</div>
+</body>
+</html>

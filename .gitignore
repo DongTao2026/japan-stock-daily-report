@@ -1,0 +1,2 @@
+# Claude Code local settings — contains sensitive data (webhook URLs, personal permissions)
+.claude/
