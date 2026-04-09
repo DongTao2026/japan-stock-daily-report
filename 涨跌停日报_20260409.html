@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本股市 涨跌停日报 2026-04-09</title>
+<style>
+  :root {
+    --up: #e8534a;
+    --up-light: #fdecea;
+    --up-border: #f5a09a;
+    --down: #3c8d40;
+    --down-light: #e8f5e9;
+    --down-border: #81c784;
+    --mid: #e6820a;
+    --mid-light: #fff8e1;
+    --mid-border: #ffcc80;
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --sub: #6b7280;
+    --border: #e5e7eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Helvetica Neue", "Noto Sans SC", "Noto Sans JP", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    color: #fff;
+    padding: 28px 24px 20px;
+  }
+  .header-inner { max-width: 900px; margin: 0 auto; }
+  .header-top {
+    display: flex; flex-wrap: wrap; align-items: flex-start;
+    justify-content: space-between; gap: 12px;
+  }
+  .report-title { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+  .report-date {
+    font-size: 13px; color: #94a3b8; margin-top: 4px; letter-spacing: 0.5px;
+  }
+  .market-badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 10px 16px;
+    text-align: right;
+    backdrop-filter: blur(4px);
+  }
+  .market-name { font-size: 11px; color: #94a3b8; margin-bottom: 3px; }
+  .market-value { font-size: 20px; font-weight: 700; color: #f8fafc; }
+  .market-change {
+    font-size: 12px; margin-top: 2px;
+    color: #86efac;
+  }
+  .market-fx {
+    font-size: 11px; color: #cbd5e1; margin-top: 6px;
+    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 6px;
+  }
+
+  /* ── Summary pills ── */
+  .summary-bar {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    max-width: 900px; margin: 16px auto 0;
+  }
+  .pill {
+    border-radius: 20px; padding: 5px 14px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: opacity .2s, transform .15s;
+    user-select: none;
+  }
+  .pill:hover { opacity: .85; transform: translateY(-1px); }
+  .pill.active { box-shadow: 0 0 0 3px rgba(255,255,255,.35); }
+  .pill-all  { background: #334155; color: #f1f5f9; }
+  .pill-high { background: var(--up); color: #fff; }
+  .pill-mid  { background: var(--mid); color: #fff; }
+  .pill-low  { background: var(--down); color: #fff; }
+
+  /* ── Main ── */
+  main { max-width: 900px; margin: 0 auto; padding: 24px 16px 48px; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 28px; }
+  .section-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .section-badge {
+    border-radius: 6px; padding: 3px 10px;
+    font-size: 12px; font-weight: 700; white-space: nowrap;
+  }
+  .badge-high { background: var(--up);   color: #fff; }
+  .badge-mid  { background: var(--mid);  color: #fff; }
+  .badge-low  { background: var(--down); color: #fff; }
+  .section-title { font-size: 16px; font-weight: 700; }
+  .section-count {
+    margin-left: auto; font-size: 12px; color: var(--sub);
+    background: var(--border); border-radius: 12px; padding: 2px 10px;
+  }
+
+  /* ── Stock Card ── */
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    transition: box-shadow .2s, transform .15s;
+    cursor: default;
+  }
+  .card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    transform: translateY(-2px);
+  }
+  .card.high { border-left: 4px solid var(--up);   background: var(--up-light); }
+  .card.mid  { border-left: 4px solid var(--mid);  background: var(--mid-light); }
+  .card.low  { border-left: 4px solid var(--down); background: var(--down-light); }
+
+  .card-code {
+    font-size: 15px; font-weight: 700; min-width: 52px;
+    color: var(--sub);
+  }
+  .card-name {
+    font-size: 14px; font-weight: 600; flex: 1; min-width: 120px;
+  }
+  .card-pct {
+    font-size: 18px; font-weight: 800;
+    min-width: 80px; text-align: right;
+  }
+  .pct-up   { color: var(--up); }
+  .pct-mid  { color: var(--mid); }
+  .pct-down { color: var(--down); }
+
+  .card-bar-wrap { width: 100%; display: flex; align-items: center; gap: 8px; }
+  .bar-track {
+    flex: 1; height: 6px; border-radius: 3px; background: #e9ecef; overflow: hidden;
+  }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width .6s ease; }
+  .bar-fill.up   { background: var(--up); }
+  .bar-fill.mid  { background: var(--mid); }
+  .bar-fill.down { background: var(--down); }
+  .bar-label { font-size: 11px; color: var(--sub); white-space: nowrap; min-width: 160px; }
+
+  .card-links { display: flex; gap: 6px; }
+  .tag-link {
+    font-size: 11px; padding: 2px 8px;
+    border-radius: 4px; text-decoration: none;
+    border: 1px solid; font-weight: 500;
+    transition: background .15s;
+  }
+  .tag-link.kabutan {
+    color: #0369a1; border-color: #7dd3fc; background: #e0f2fe;
+  }
+  .tag-link.kabutan:hover { background: #bae6fd; }
+  .tag-link.irbank {
+    color: #7e22ce; border-color: #d8b4fe; background: #f5f3ff;
+  }
+  .tag-link.irbank:hover { background: #ede9fe; }
+
+  /* ── Chart Section ── */
+  .chart-wrap {
+    background: var(--card); border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+  .chart-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; color: var(--sub); }
+  .chart-bars { display: flex; flex-direction: column; gap: 10px; }
+  .chart-row { display: flex; align-items: center; gap: 10px; }
+  .chart-row-name { font-size: 12px; width: 140px; flex-shrink: 0; font-weight: 600; }
+  .chart-row-bar-wrap { flex: 1; height: 22px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
+  .chart-row-bar { height: 100%; border-radius: 4px; transition: width .8s cubic-bezier(.4,0,.2,1); display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 700; color: #fff; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center; font-size: 12px; color: var(--sub);
+    padding-bottom: 24px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    max-width: 900px; margin: 0 auto;
+  }
+
+  /* ── Hidden ── */
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div>
+        <div class="report-title">日本股市 涨跌停日报</div>
+        <div class="report-date">2026年04月09日（周四）15:30 收盘</div>
+      </div>
+      <div class="market-badge">
+        <div class="market-name">日経225</div>
+        <div class="market-value">55,895</div>
+        <div class="market-change">▼ −413 &nbsp;(−0.73%)</div>
+        <div class="market-fx">美元/日元 &nbsp;158.79</div>
+      </div>
+    </div>
+    <!-- Filter Pills -->
+    <div class="summary-bar">
+      <div class="pill pill-all active" onclick="filter('all')">全部 9支</div>
+      <div class="pill pill-high" onclick="filter('high')">S高 收盘涨停 7支</div>
+      <div class="pill pill-low"  onclick="filter('low')">S安 收盘跌停 2支</div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ── PERFORMANCE CHART ── -->
+  <div class="chart-wrap">
+    <div class="chart-title">各股涨跌幅一览</div>
+    <div class="chart-bars" id="chart"></div>
+  </div>
+
+  <!-- ── SECTION: S高 ── -->
+  <div class="section" id="sec-high">
+    <div class="section-header">
+      <span class="section-badge badge-high">S高</span>
+      <span class="section-title">收盘涨停</span>
+      <span class="section-count">7 支</span>
+    </div>
+
+    <div class="card high" data-type="high">
+      <div class="card-code">6552</div>
+      <div class="card-name">ゲームウィズ</div>
+      <div class="card-pct pct-up">+27.03%</div>
+      <div class="card-bar-wrap">
+        <div class="bar-track"><div class="bar-fill up" style="width:100%"></div></div>
+        <div class="bar-label">Q3好決算評価</div>
+      </div>
+      <div class="card-links">
+        <a class="tag-link kabutan" href="https://kabutan.jp/stock/?code=6552" target="_blank">kabutan</a>
+        <a class="tag-link irbank"  href="https://irbank.net/6552" target="_blank">IR Bank</a>
+      </div>
+    </div>
+
+    <div class="card high" data-type="high">
+      <div class="card-code">549A</div>
+      <div class="card-name">ヒトトヒトＨ</div>
+      <div class="card-pct pct-up">+19.19%</div>
+      <div class="card-bar-wrap">
+        <div class="bar-track"><div class="bar-fill up" style="width:71%"></div></div>
+        <div class="bar-label">前日継続買い</div>
+      </div>
+      <div class="card-links">
+        <a class="tag-link kabutan" href="https://kabutan.jp/stock/?code=549A" target="_blank">kabutan</a>
+        <a class="tag-link irbank"  href="https://irbank.net/549A" target="_blank">IR Bank</a>
+      </div>
+    </div>
+
+    <div class="card high" data-type="high">
+      <div class="card-code">281A</div>
+      <div class="card-name">インフォメテ</div>
+      <div class="card-pct pct-up">+18.42%</div>
+      <div class="card-bar-wrap">
+        <div class="bar-track"><div class="bar-fill up" style="width:68%"></div></div>
+        <div class="bar-label">AI関連銘柄として期待</div>
+      </div>
+      <div class="card-links">
+        <a class="tag-link kabutan" href="https://kabutan.jp/stock/?code=281A" target="_blank">kabutan</a>
+        <a class="tag-link irbank"  href="https://irbank.net/281A" target="_blank">IR Bank</a>
+      </div>
+    </div>
+
+    <div class="card high" data-type="high">
+      <div class="card-code">5129</div>
+      <div class="card-name">FIXER</div>
+      <div class="card-pct pct-up">+18.18%</div>
+      <div class="card-bar-wrap">
+        <div class="bar-track"><div class="bar-fill up" style="width:67%"></div></div>
+        <div class="bar-label">国内生成AI基盤受注獲得</div>
+      </div>
+      <div class="card-links">
+        <a class="tag-link kabutan" href="https://kabutan.jp/stock/?code=5129" target="_blank">kabutan</a>
+        <a class="tag-link irbank"  href="https://irbank.net/5129" target="_blank">IR Bank</a>
+      </div>
+    </div>
+
+    <div class="card high" data-type="high">
+      <div class="card-code">4422</div>
+      <div class="card-name">VNX</div>
+      <div class="card-pct pct-up">+18.04%</div>
+      <div class="card-bar-wrap">
+        <div class="bar-track"><div class="bar-fill up" style="width:67%"></div></div>
+        <div class="bar-label">技術系アップグレード</div>
+      </div>
+      <div class="card-links">
+        <a class="tag-link kabutan" href="https://kabutan.jp/stock/?code=4422" target="_blank">kabutan</a>
+        <a class="tag-link irbank"  href="https://irbank.net/4422" target="_blank">IR Bank</a>
+      </div>
+    </div>
+
+    <div class="card high" data-type="high">
+      <div class="card-code">3192</div>
+      <div class="card-name">日鳥</div>
+      <div class="card-pct pct-up">+17.78%</div>
+      <div class="card-bar-wrap">
+        <div class="bar-track"><div class="bar-fill up" style="width:66%"></div></div>
+        <div class="bar-label">決算改善期待</div>
+      </div>
+      <div class="card-links">
+        <a class="tag-link kabutan" href="https://kabutan.jp/stock/?code=3192" target="_blank">kabutan</a>
+        <a class="tag-link irbank"  href="https://irbank.net/3192" target="_blank">IR Bank</a>
+      </div>
+    </div>
+
+    <div class="card high" data-type="high">
+      <div class="card-code">5337</div>
+      <div class="card-name">ダントーＨＤ</div>
+      <div class="card-pct pct-up">+17.39%</div>
+      <div class="card-bar-wrap">
+        <div class="bar-track"><div class="bar-fill up" style="width:64%"></div></div>
+        <div class="bar-label">建設投資期待</div>
+      </div>
+      <div class="card-links">
+        <a class="tag-link kabutan" href="https://kabutan.jp/stock/?code=5337" target="_blank">kabutan</a>
+        <a class="tag-link irbank"  href="https://irbank.net/5337" target="_blank">IR Bank</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION: S安 ── -->
+  <div class="section" id="sec-low">
+    <div class="section-header">
+      <span class="section-badge badge-low">S安</span>
+      <span class="section-title">收盘跌停</span>
+      <span class="section-count">2 支</span>
+    </div>
+
+    <div class="card low" data-type="low">
+      <div class="card-code">1447</div>
+      <div class="card-name">SAAFD</div>
+      <div class="card-pct pct-down">−18.59%</div>
+      <div class="card-bar-wrap">
+        <div class="bar-track"><div class="bar-fill down" style="width:69%"></div></div>
+        <div class="bar-label">市況悪化</div>
+      </div>
+      <div class="card-links">
+        <a class="tag-link kabutan" href="https://kabutan.jp/stock/?code=1447" target="_blank">kabutan</a>
+        <a class="tag-link irbank"  href="https://irbank.net/1447" target="_blank">IR Bank</a>
+      </div>
+    </div>
+
+    <div class="card low" data-type="low">
+      <div class="card-code">4265</div>
+      <div class="card-name">IGS</div>
+      <div class="card-pct pct-down">−18.22%</div>
+      <div class="card-bar-wrap">
+        <div class="bar-track"><div class="bar-fill down" style="width:67%"></div></div>
+        <div class="bar-label">利益確定売り</div>
+      </div>
+      <div class="card-links">
+        <a class="tag-link kabutan" href="https://kabutan.jp/stock/?code=4265" target="_blank">kabutan</a>
+        <a class="tag-link irbank"  href="https://irbank.net/4265" target="_blank">IR Bank</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  数据来源与网络，仅供参考，不构成投资建议
+</footer>
+
+<script>
+  // ── Filter ──
+  function filter(type) {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    const pillMap = { all: '.pill-all', high: '.pill-high', low: '.pill-low' };
+    document.querySelector(pillMap[type]).classList.add('active');
+
+    const sections = { high: 'sec-high', low: 'sec-low' };
+    for (const [key, id] of Object.entries(sections)) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden', type !== 'all' && type !== key);
+    }
+  }
+
+  // ── Build horizontal bar chart ──
+  const stocks = [
+    { code: '6552', name: 'ゲームウィズ',   pct: 27.03,  type: 'up'   },
+    { code: '549A', name: 'ヒトトヒトＨ',   pct: 19.19,  type: 'up'   },
+    { code: '281A', name: 'インフォメテ',   pct: 18.42,  type: 'up'   },
+    { code: '5129', name: 'FIXER',           pct: 18.18,  type: 'up'   },
+    { code: '4422', name: 'VNX',             pct: 18.04,  type: 'up'   },
+    { code: '3192', name: '日鳥',            pct: 17.78,  type: 'up'   },
+    { code: '5337', name: 'ダントーＨＤ',   pct: 17.39,  type: 'up'   },
+    { code: '1447', name: 'SAAFD',           pct: -18.59, type: 'down' },
+    { code: '4265', name: 'IGS',             pct: -18.22, type: 'down' },
+  ];
+
+  const colorMap = { up: '#e8534a', mid: '#e6820a', down: '#3c8d40' };
+  const max = Math.max(...stocks.map(s => Math.abs(s.pct)));
+
+  const chart = document.getElementById('chart');
+  stocks.forEach(s => {
+    const widthPct = (Math.abs(s.pct) / max * 100).toFixed(1);
+    const sign = s.pct >= 0 ? '+' : '';
+    const row = document.createElement('div');
+    row.className = 'chart-row';
+    row.innerHTML = `
+      <div class="chart-row-name">${s.code} ${s.name}</div>
+      <div class="chart-row-bar-wrap">
+        <div class="chart-row-bar" style="width:0%;background:${colorMap[s.type]}"
+             data-w="${widthPct}%">
+          ${sign}${s.pct}%
+        </div>
+      </div>`;
+    chart.appendChild(row);
+  });
+
+  // Animate bars on load
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.querySelectorAll('.chart-row-bar').forEach(bar => {
+        bar.style.transition = 'width .8s cubic-bezier(.4,0,.2,1)';
+        bar.style.width = bar.dataset.w;
+      });
+    }, 80);
+  });
+</script>
+</body>
+</html>
